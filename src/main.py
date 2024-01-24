@@ -1,5 +1,9 @@
+import threading
 import tkinter as tk
 import json
+import pygame
+
+from config import COMPLETE_TASK_SFX_PATH
 
 class TaskApp:
     def __init__(self):
@@ -63,6 +67,16 @@ class TaskApp:
             self.completed_tasks.append(current_task)  # Add it to the completed tasks list
             self.current_task_label.config(text='')  # Clear the current task label
             self.save_tasks()  # Save the updated tasks
+            self.play_completion_sound()  # Play the task completion sound
+    
+    def play_completion_sound(self):
+        """Play the task completion sound using pygame to avoid blocking."""
+        try:
+            pygame.mixer.init()
+            pygame.mixer.music.load(COMPLETE_TASK_SFX_PATH)
+            pygame.mixer.music.play()
+        except Exception as e:
+            print(f"Error playing sound: {e}")
 
     def load_tasks(self):
         """Load tasks from a JSON file."""

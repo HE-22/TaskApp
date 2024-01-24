@@ -1,0 +1,1 @@
+COMPLETE_TASK_SFX_PATH = "/Users/hassen/LocalDev/PYTHON_PROJECTS/Todo++/assets/sfx/complete_task.mp3"
