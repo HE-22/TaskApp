@@ -5,7 +5,7 @@
         "label": "Run Main.py",
         "command": "${workspaceFolder}/.venv/bin/python",
         "args": [
-            "${workspaceFolder}/main.py"
+            "${workspaceFolder}/src/main.py"
         ],
         "type": "shell",
         "problemMatcher": [],

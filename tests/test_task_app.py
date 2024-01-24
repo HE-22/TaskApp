@@ -1,6 +1,6 @@
 import pytest
 import json
-from main import TaskApp
+from src.main import TaskApp
 from unittest.mock import mock_open, patch
 
 @pytest.fixture

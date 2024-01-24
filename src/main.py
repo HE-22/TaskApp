@@ -53,7 +53,7 @@ class TaskApp:
     def load_tasks(self):
         """Load tasks from a JSON file."""
         try:
-            with open('todo.json', 'r') as file:
+            with open('data/todo.json', 'r') as file:
                 data = json.load(file)
                 # Check if data is a dictionary with expected keys
                 if isinstance(data, dict) and 'tasks' in data and 'current_task' in data:
@@ -76,7 +76,7 @@ class TaskApp:
         """Save tasks to a JSON file."""
         tasks = [label.cget("text") for label in self.tasks_frame.winfo_children()]
         current_task = self.current_task_label.cget("text")
-        with open('todo.json', 'w') as file:
+        with open('data/todo.json', 'w') as file:
             json.dump({
                 'tasks': tasks,
                 'current_task': current_task,

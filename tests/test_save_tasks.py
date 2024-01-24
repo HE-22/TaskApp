@@ -2,7 +2,7 @@
 
 import pytest
 import json
-from main import TaskApp
+from src.main import TaskApp
 from unittest.mock import mock_open, patch
 
 @pytest.fixture
@@ -22,6 +22,7 @@ def test_save_tasks(app):
         with patch('json.dump') as mock_json_dump:
             app.save_tasks()
             # Check if the file is opened in write mode
-            m.assert_called_once_with('todo.json', 'w')
+            m.assert_called_once_with('data/todo.json', 'w')
             # Check if the data is dumped correctly
             mock_json_dump.assert_called_once_with(mock_data, m())
+
