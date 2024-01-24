@@ -38,6 +38,9 @@ class TaskApp:
 
         self.load_tasks()
 
+        # Bind Command + R to refresh the UI
+        self.window.bind('<Command-r>', self.refresh_ui)
+
     def create_task(self, label):
         def move_task_to_top(event=None):
             # Add the completed task to the completed tasks list
@@ -66,8 +69,16 @@ class TaskApp:
                     tasks = data
                     current_task = ""
                     self.completed_tasks = []
+                
+                # Clear the tasks_frame before loading new tasks
+                for widget in self.tasks_frame.winfo_children():
+                    widget.destroy()
+                
+                # Add tasks from the loaded data
                 for task_text in tasks:
                     self.add_task_from_load(task_text)
+                
+                # Update the current task label
                 self.current_task_label.config(text=current_task)
         except FileNotFoundError:
             pass  # No tasks to load
@@ -103,6 +114,19 @@ class TaskApp:
             self.create_task(label)
             self.task_entry.delete(0, tk.END)
             self.save_tasks()
+
+    def refresh_ui(self, event=None):
+        """
+        - Clears the current tasks displayed in the UI.
+        - Reloads tasks from the todo.json file.
+        - Redraws the UI with the updated tasks.
+        """
+        # Clear the current tasks displayed in the tasks_frame
+        for widget in self.tasks_frame.winfo_children():
+            widget.destroy()
+        
+        # Reload the tasks from the todo.json file
+        self.load_tasks()
 
     def run(self):
         self.window.mainloop()
