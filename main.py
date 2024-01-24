@@ -19,7 +19,7 @@ class TaskApp:
         self.main_task_frame = tk.Frame(self.window)
         self.main_task_frame.pack(fill='both', expand=True)
 
-        self.current_task_label = tk.Label(self.main_task_frame, text='', font=('Helvetica', 20, 'bold'))
+        self.current_task_label = tk.Label(self.main_task_frame, text='', font=('Helvetica', 20, 'bold'), wraplength=window_width)
         self.current_task_label.pack(fill='x', pady=2, padx=10, anchor='n')
 
         self.spacer_label = tk.Label(self.window, text='', font=('Helvetica', 20, 'bold'))
