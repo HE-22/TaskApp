@@ -5,6 +5,8 @@ import pygame
 
 from config import COMPLETE_TASK_SFX_PATH
 
+# TODO: add muli-projects, each project has a list of tasks
+
 class TaskApp:
     def __init__(self):
         self.window = tk.Tk()
@@ -135,6 +137,10 @@ class TaskApp:
         label.pack(fill='x', pady=2, padx=10, anchor='n')
         self.create_task(label)
 
+    def format_text(self, text):
+        """Capitalize the first letter of the text."""
+        return text[0].upper() + text[1:]
+
     def add_task(self, event=None):
         """
         - Adds a new task to the task list.
@@ -143,7 +149,8 @@ class TaskApp:
         """
         task_text = self.task_entry.get()
         if task_text.strip():
-            label = tk.Label(self.tasks_frame, text=task_text, font=('San Francisco', 15, 'normal'), bg='white', fg='black')
+            task_text = self.format_text(task_text)
+            label = tk.Label(self.tasks_frame, text=task_text, font=('San Francisco', 15, 'normal'), bg='#585454', fg='white')
             # If there is no 'Main Task', just pack the new task normally
             label.pack(fill='x', pady=2, padx=10, anchor='n')
             self.create_task(label)
