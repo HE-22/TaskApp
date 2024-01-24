@@ -34,12 +34,17 @@ class TaskApp:
         self.task_entry.bind('<Return>', self.add_task)
         self.task_entry.focus_set()  # Automatically focus cursor onto the text box
 
+        self.completed_tasks = []  # Initialize the completed tasks list
+
         self.load_tasks()
 
     def create_task(self, label):
         def move_task_to_top(event=None):
+            # Add the completed task to the completed tasks list
+            completed_task = label.cget("text")
+            self.completed_tasks.append(completed_task)
             # Clear the current task label and update it with the clicked task's text
-            self.current_task_label.config(text=label.cget("text"))
+            self.current_task_label.config(text=completed_task)
             # Remove the clicked task from the tasks_frame
             label.destroy()
             self.save_tasks()
@@ -54,10 +59,13 @@ class TaskApp:
                 if isinstance(data, dict) and 'tasks' in data and 'current_task' in data:
                     tasks = data['tasks']
                     current_task = data['current_task']
+                    # Load completed tasks if they exist in the file
+                    self.completed_tasks = data.get('completed_tasks', [])
                 else:
                     # If data is not in the expected format, treat it as a list of tasks
                     tasks = data
                     current_task = ""
+                    self.completed_tasks = []
                 for task_text in tasks:
                     self.add_task_from_load(task_text)
                 self.current_task_label.config(text=current_task)
@@ -69,7 +77,11 @@ class TaskApp:
         tasks = [label.cget("text") for label in self.tasks_frame.winfo_children()]
         current_task = self.current_task_label.cget("text")
         with open('todo.json', 'w') as file:
-            json.dump({'tasks': tasks, 'current_task': current_task}, file)
+            json.dump({
+                'tasks': tasks,
+                'current_task': current_task,
+                'completed_tasks': self.completed_tasks  # Save the completed tasks list
+            }, file)
 
     def add_task_from_load(self, task_text):
         """Add a task from the loaded data without saving."""
