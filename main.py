@@ -16,9 +16,6 @@ class TaskApp:
         self.window.geometry("+{}+{}".format(position_right, position_down))
         self.window.update_idletasks()  # Update the window to get correct dimensions
 
-        self.header_label = tk.Label(self.window, text='Main Task', font=('Helvetica', 20, 'bold'))
-        self.header_label.pack()
-
         self.main_task_frame = tk.Frame(self.window)
         self.main_task_frame.pack(fill='both', expand=True)
 
