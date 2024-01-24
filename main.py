@@ -4,7 +4,7 @@ import json
 class TaskApp:
     def __init__(self):
         self.window = tk.Tk()
-        self.window.title('Task Prioritization System')
+        self.window.title('')
 
         # Center the window on the screen
         self.window.geometry('300x500')  # Set the window width to 300 and height to 500
