@@ -7,14 +7,15 @@ class TaskApp:
         self.window.title('')
 
         # Center the window on the screen
-        self.window.geometry('300x500')  # Set the window width to 300 and height to 500
-        self.window.update_idletasks()  # Update the window to get correct dimensions
-        window_width = self.window.winfo_width()
-        window_height = self.window.winfo_height()
-        position_right = int(self.window.winfo_screenwidth()/2 - window_width/2)
-        position_down = int(self.window.winfo_screenheight()/2 - window_height/2)
-        self.window.geometry("+{}+{}".format(position_right, position_down))
-        self.window.update_idletasks()  # Update the window to get correct dimensions
+        window_width = 300
+        window_height = 500
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+        # Calculate position coordinates
+        position_right = int(screen_width/2 - window_width/2)
+        position_down = int(screen_height/2 - window_height/2)
+        # Set the window's dimensions and position
+        self.window.geometry(f'{window_width}x{window_height}+{position_right}+{position_down}')
 
         self.main_task_frame = tk.Frame(self.window)
         self.main_task_frame.pack(fill='both', expand=True)
