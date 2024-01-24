@@ -40,18 +40,29 @@ class TaskApp:
 
         # Bind Command + R to refresh the UI
         self.window.bind('<Command-r>', self.refresh_ui)
+        # Bind Command + D to complete the current task
+        self.window.bind('<Command-d>', self.complete_task)
 
     def create_task(self, label):
-        def move_task_to_top(event=None):
-            # Add the completed task to the completed tasks list
-            completed_task = label.cget("text")
-            self.completed_tasks.append(completed_task)
-            # Clear the current task label and update it with the clicked task's text
-            self.current_task_label.config(text=completed_task)
-            # Remove the clicked task from the tasks_frame
-            label.destroy()
+        def swap_task_with_main(event=None):
+            # Swap the clicked task with the current main task
+            current_task = self.current_task_label.cget("text")
+            clicked_task = label.cget("text")
+            if current_task:
+                label.config(text=current_task)
+            else:
+                label.destroy()
+            self.current_task_label.config(text=clicked_task)
             self.save_tasks()
-        label.bind('<Button-1>', move_task_to_top)
+        label.bind('<Button-1>', swap_task_with_main)
+
+    def complete_task(self, event=None):
+        """Move the current main task to the completed tasks list."""
+        current_task = self.current_task_label.cget("text").strip()  # Ensure no whitespace
+        if current_task:  # Check if there is a current task
+            self.completed_tasks.append(current_task)  # Add it to the completed tasks list
+            self.current_task_label.config(text='')  # Clear the current task label
+            self.save_tasks()  # Save the updated tasks
 
     def load_tasks(self):
         """Load tasks from a JSON file."""
@@ -79,7 +90,8 @@ class TaskApp:
                     self.add_task_from_load(task_text)
                 
                 # Update the current task label
-                self.current_task_label.config(text=current_task)
+                if current_task:
+                    self.current_task_label.config(text=current_task)
         except FileNotFoundError:
             pass  # No tasks to load
 
@@ -87,6 +99,7 @@ class TaskApp:
         """Save tasks to a JSON file."""
         tasks = [label.cget("text") for label in self.tasks_frame.winfo_children()]
         current_task = self.current_task_label.cget("text")
+        
         with open('data/todo.json', 'w') as file:
             json.dump({
                 'tasks': tasks,
@@ -134,3 +147,4 @@ class TaskApp:
 if __name__ == "__main__":
     app = TaskApp()
     app.run()
+
