@@ -50,18 +50,69 @@ class TaskApp:
         # Bind Command + minus to clear all tasks
         self.window.bind('<Command-minus>', self.clear_all_tasks)
 
+        # Bind arrow keys for task selection and Enter for task activation
+        self.window.bind('<Up>', self.select_previous_task)
+        self.window.bind('<Down>', self.select_next_task)
+        self.window.bind('<Return>', self.activate_selected_task)
+        # Bind Escape to deselect any selected task
+        self.window.bind('<Escape>', self.deselect_task)
+
+        self.selected_task_index = None
+
+        # Bind Command + i to swap_task_with_main for the entire window.
+        self.window.bind('<Command-i>', self.swap_task_with_main)
+
     def create_task(self, label):
-        def swap_task_with_main(event=None):
-            # Swap the clicked task with the current main task
+        pass
+
+    def swap_task_with_main(self, event=None):
+        """Swap the selected task with the current main task."""
+        if self.selected_task_index is not None:
+            # Get the selected task label using the index.
+            label = self.tasks_frame.winfo_children()[self.selected_task_index]
             current_task = self.current_task_label.cget("text")
-            clicked_task = label.cget("text")
+            selected_task = label.cget("text")
+            # Swap the tasks.
+            self.current_task_label.config(text=selected_task)
             if current_task:
                 label.config(text=current_task)
             else:
                 label.destroy()
-            self.current_task_label.config(text=clicked_task)
             self.save_tasks()
-        label.bind('<Button-1>', swap_task_with_main)
+
+    def activate_selected_task(self, event=None):
+        """Activate the selected task."""
+        if self.selected_task_index is not None:
+            self.swap_task_with_main(event)
+
+    def select_previous_task(self, event=None):
+        """Select the previous task in the list."""
+        if self.selected_task_index is None or self.selected_task_index == 0:
+            self.selected_task_index = len(self.tasks_frame.winfo_children()) - 1
+        else:
+            self.selected_task_index -= 1
+        self.highlight_selected_task()
+
+    def select_next_task(self, event=None):
+        """Select the next task in the list."""
+        if self.selected_task_index is None or self.selected_task_index == len(self.tasks_frame.winfo_children()) - 1:
+            self.selected_task_index = 0
+        else:
+            self.selected_task_index += 1
+        self.highlight_selected_task()
+
+    def deselect_task(self, event=None):
+        """Deselect any selected task."""
+        self.selected_task_index = None
+        self.highlight_selected_task()
+
+    def highlight_selected_task(self):
+        """Highlight the selected task."""
+        for i, widget in enumerate(self.tasks_frame.winfo_children()):
+            if i == self.selected_task_index:
+                widget.config(bg='#E6E1E1', fg='black')
+            else:
+                widget.config(bg='#2C2929', fg='white')
 
     def complete_task(self, event=None):
         """Move the current main task to the completed tasks list."""
@@ -73,10 +124,16 @@ class TaskApp:
             self.play_completion_sound()  # Play the task completion sound
 
     def clear_all_tasks(self, event=None):
-        """Clear all tasks without saving them to the completed tasks list."""
+        """
+        - Clears the current task label.
+        - Destroys all task widgets in the tasks frame.
+        - Resets the selected task index.
+        - Saves the updated tasks.
+        """
         self.current_task_label.config(text='')  # Clear the current task label
         for widget in self.tasks_frame.winfo_children():
             widget.destroy()  # Destroy each task widget
+        self.selected_task_index = None  # Reset the selected task index
         self.save_tasks()  # Save the updated tasks
 
     def play_completion_sound(self):
